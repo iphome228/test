@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Trappa</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --background: #07100d;
+      --panel: #0b1713;
+      --mint: #7cffc0;
+      --mint-dim: rgba(124, 255, 192, 0.35);
+      --ink-dim: rgba(180, 210, 195, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+      overflow: hidden;
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(42, 105, 75, 0.18),
+          transparent 42%
+        ),
+        var(--background);
+      color: var(--mint);
+      font-family: "IBM Plex Mono", monospace;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image:
+        linear-gradient(rgba(124, 255, 192, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 255, 192, 0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      content: "";
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      width: min(100%, 560px);
+      text-align: center;
+    }
+
+    .marker {
+      position: absolute;
+      top: -42px;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--mint);
+      box-shadow: 0 0 16px 3px var(--mint-dim);
+      transform: translateX(-50%);
+    }
+
+    .logo {
+      color: var(--mint);
+      font-size: clamp(48px, 13vw, 86px);
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      line-height: 1;
+      text-shadow: 0 0 28px rgba(124, 255, 192, 0.22);
+      text-transform: uppercase;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin: 24px 0 34px;
+    }
+
+    .bar {
+      width: 92px;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        var(--mint-dim),
+        transparent
+      );
+    }
+
+    .diamond {
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--mint);
+      box-shadow: 0 0 10px var(--mint-dim);
+      transform: rotate(45deg);
+    }
+
+    .panel {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 42px;
+      border: 1px solid rgba(124, 255, 192, 0.16);
+      border-radius: 18px;
+      background: rgba(11, 23, 19, 0.78);
+      box-shadow:
+        inset 0 0 36px rgba(124, 255, 192, 0.025),
+        0 18px 70px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(8px);
+    }
+
+    .corner {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--mint-dim);
+      opacity: 0.8;
+    }
+
+    .corner.tl {
+      top: 10px;
+      left: 10px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .corner.tr {
+      top: 10px;
+      right: 10px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .corner.bl {
+      bottom: 10px;
+      left: 10px;
+      border-right: none;
+      border-top: none;
+    }
+
+    .corner.br {
+      right: 10px;
+      bottom: 10px;
+      border-left: none;
+      border-top: none;
+    }
+
+    .operator-btn {
+      position: relative;
+      z-index: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 19px 0;
+      border: 1px solid rgba(124, 255, 192, 0.35);
+      border-radius: 12px;
+      background: linear-gradient(
+        180deg,
+        rgba(124, 255, 192, 0.1),
+        rgba(124, 255, 192, 0.02)
+      );
+      color: var(--mint);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.32em;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 0 rgba(124, 255, 192, 0);
+      transition:
+        box-shadow 0.3s ease,
+        background 0.3s ease,
+        transform 0.15s ease;
+    }
+
+    .operator-btn:hover {
+      background: linear-gradient(
+        180deg,
+        rgba(124, 255, 192, 0.18),
+        rgba(124, 255, 192, 0.04)
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        0 0 34px rgba(124, 255, 192, 0.22);
+    }
+
+    .operator-btn:active {
+      transform: scale(0.98);
+    }
+
+    .ticks {
+      display: flex;
+      z-index: 1;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tick {
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: var(--ink-dim);
+    }
+
+    .tick.on {
+      background: var(--mint);
+      box-shadow: 0 0 6px 1px var(--mint-dim);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .marker,
+      .panel::before {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .panel {
+        padding: 36px 26px;
+      }
+
+      .logo {
+        font-size: 56px;
+        letter-spacing: 0.1em;
+      }
+
+      .bar {
+        width: 58px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="marker"></div>
+
+    <div class="logo">Trappa</div>
+
+    <div class="divider">
+      <span class="bar"></span>
+      <span class="diamond"></span>
+      <span class="bar"></span>
+    </div>
+
+    <section class="panel">
+      <span class="corner tl"></span>
+      <span class="corner tr"></span>
+      <span class="corner bl"></span>
+      <span class="corner br"></span>
+
+      <a
+        class="operator-btn"
+        href="https://t.me/trxppxpt"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        OPERATOR
+      </a>
+
+      <div class="ticks" aria-label="Статус">
+        <span class="tick"></span>
+        <span class="tick on"></span>
+        <span class="tick"></span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
